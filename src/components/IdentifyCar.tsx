@@ -13,10 +13,10 @@ const IdentifyCar: React.FC<{
     if(stateOfMachine.error)  alert('Enter proper plate number!')
 
     const handleForm = async () => {
-        setStateOfMachine({type: "LOADING"})
-        if  (inputRef.current) {
+        if  (inputRef.current && inputRef.current.value.length === 4) {
+            setStateOfMachine({type: "LOADING"})
             try{
-                const plateNumber = await handleAsyncData(inputRef.current.value, false)
+                const plateNumber = await handleAsyncData(inputRef.current.value)
                 setStateOfMachine({
                     type: "CHOOSE_DAMAGE",
                     plateNumber: parseInt(plateNumber as string)
@@ -46,3 +46,4 @@ const IdentifyCar: React.FC<{
 }
 
 export default IdentifyCar
+
