@@ -6,9 +6,10 @@ const ChooseDamage: React.FC<{
     setStateOfMachine: (newStateOfMachine: CarDamageAppState) => void,
     stateOfMachine: CarDamageAppState
 }> = ({setStateOfMachine, stateOfMachine}) => {
+    assertState(stateOfMachine, "CHOOSE_DAMAGE")
     const inputRef = React.createRef<HTMLSelectElement>()
+
     const handleForm = () => {
-        assertState(stateOfMachine, "CHOOSE_DAMAGE")
         if  (inputRef.current) {
             setStateOfMachine({
                 type: "CONTACT_OPTION",

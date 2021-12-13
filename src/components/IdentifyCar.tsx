@@ -8,8 +8,10 @@ const IdentifyCar: React.FC<{
     stateOfMachine: CarDamageAppState
 }> = ({setStateOfMachine, stateOfMachine}) => {
     assertState(stateOfMachine, "IDENTIFY_CAR")
-    if(stateOfMachine.error)  alert('Enter proper plate number!')
     const inputRef = React.createRef<HTMLInputElement>()
+
+    if(stateOfMachine.error)  alert('Enter proper plate number!')
+
     const handleForm = async () => {
         setStateOfMachine({type: "LOADING"})
         if  (inputRef.current) {
@@ -25,7 +27,6 @@ const IdentifyCar: React.FC<{
                     error: true
                 })
             }
-
         } else {
             alert('You mas pass proper 4 digit plate number of car!')
         }
@@ -44,4 +45,4 @@ const IdentifyCar: React.FC<{
     )
 }
 
-export  default IdentifyCar
+export default IdentifyCar

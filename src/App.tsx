@@ -38,7 +38,7 @@ function App() {
               />
           )
       default:
-          const leftover: never = carDamageAppState
+          const leftover = carDamageAppState
           return null
   }
 }

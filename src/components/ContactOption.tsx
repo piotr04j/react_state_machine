@@ -1,22 +1,38 @@
 import React from "react";
 import {CarDamageAppState, damageType} from "../model/state";
 import {assertState} from "../model/assertState";
+import handleAsyncData from "../utils/restFaker";
 
 const ContactOption: React.FC<{
     setStateOfMachine: (newStateOfMachine: CarDamageAppState) => void,
     stateOfMachine: CarDamageAppState
 }> = ({setStateOfMachine, stateOfMachine}) => {
+    assertState(stateOfMachine, "CONTACT_OPTION")
     const inputRef = React.createRef<HTMLSelectElement>()
-    const handleForm = () => {
-        assertState(stateOfMachine, "CONTACT_OPTION")
+
+    if(stateOfMachine.error)  alert('We have an issue! Try again later.')
+
+    const handleForm = async () => {
+        setStateOfMachine({type: "LOADING"})
         if  (inputRef.current) {
-            const contactWay =  inputRef.current.value === "call" ? "CALL_SELLER" : "CHAT_SELLER"
-            setStateOfMachine({
-                type: contactWay,
-                plateNumber: stateOfMachine.plateNumber,
-                chosenDamage: inputRef.current.value as damageType,
-                error: false
-            })
+            setStateOfMachine({type: "LOADING"})
+            try {
+                const contactWayInputValue =  inputRef.current.value
+                const contactWay= await handleAsyncData(contactWayInputValue === "call" ? "CALL_SELLER" : "CHAT_SELLER") as "CALL_SELLER" | "CHAT_SELLER"
+                setStateOfMachine({
+                    type: contactWay,
+                    plateNumber: stateOfMachine.plateNumber,
+                    chosenDamage: stateOfMachine.chosenDamage,
+                    error: false
+                })
+            } catch (e) {
+                setStateOfMachine({
+                    type: "CONTACT_OPTION",
+                    plateNumber: stateOfMachine.plateNumber,
+                    chosenDamage: stateOfMachine.chosenDamage,
+                    error: true
+                })
+            }
         }
     }
 
