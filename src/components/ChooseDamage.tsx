@@ -1,22 +1,19 @@
 import React from "react";
 import {CarDamageAppState, damageType} from "../model/state";
 import {assertState} from "../model/assertState";
+import {useDispatch} from "react-redux";
+import {chooseContact} from "../store/actions";
 
 const ChooseDamage: React.FC<{
-    setStateOfMachine: (newStateOfMachine: CarDamageAppState) => void,
     stateOfMachine: CarDamageAppState
-}> = ({setStateOfMachine, stateOfMachine}) => {
+}> = ({ stateOfMachine}) => {
     assertState(stateOfMachine, "CHOOSE_DAMAGE")
     const inputRef = React.createRef<HTMLSelectElement>()
+    const dispatch = useDispatch()
 
     const handleForm = () => {
         if  (inputRef.current) {
-            setStateOfMachine({
-                type: "CONTACT_OPTION",
-                plateNumber: stateOfMachine.plateNumber,
-                chosenDamage: inputRef.current.value as damageType,
-                error: false
-            })
+            dispatch(chooseContact( stateOfMachine.plateNumber, false, inputRef.current.value as damageType))
         }
     }
 

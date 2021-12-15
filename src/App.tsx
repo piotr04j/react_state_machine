@@ -6,26 +6,25 @@ import {CarDamageAppState} from "./model/state";
 import Initial from "./components/Initial";
 import Loader from "react-loader-spinner";
 import './App.css'
+import {useSelector} from "react-redux";
 
 function App() {
-  const [carDamageAppState, setCarDamageAppState] = useState<CarDamageAppState>({
-      type: "INITIAL"
-  })
+  const state = useSelector<{ type: 'INITIAL' }, CarDamageAppState>(state => state)
 
-  switch (carDamageAppState.type){
+  switch (state.type){
       case "INITIAL":
-          return <Initial setStateOfMachine={setCarDamageAppState}/>
+          return <Initial />
       case "IDENTIFY_CAR":
-          return <IdentifyCar setStateOfMachine={setCarDamageAppState}  stateOfMachine={carDamageAppState}/>
+          return <IdentifyCar stateOfMachine={state}/>
       case "CHOOSE_DAMAGE":
-          return <ChooseDamage setStateOfMachine={setCarDamageAppState}  stateOfMachine={carDamageAppState}/>
+          return <ChooseDamage stateOfMachine={state}/>
       case "CONTACT_OPTION":
-          return <ContactOption setStateOfMachine={setCarDamageAppState}  stateOfMachine={carDamageAppState}/>
+          return <ContactOption stateOfMachine={state}/>
       case "CHAT_SELLER":
-          alert('Chat with seller! Car with plate number ' + carDamageAppState.plateNumber + ' has damage: ' + carDamageAppState.chosenDamage)
+          alert('Chat with seller! Car with plate number ' + state.plateNumber + ' has damage: ' + state.chosenDamage)
           return null
       case "CALL_SELLER":
-          alert('Call with seller! Car with plate number ' + carDamageAppState.plateNumber + ' has damage: ' + carDamageAppState.chosenDamage)
+          alert('Call with seller! Car with plate number ' + state.plateNumber + ' has damage: ' + state.chosenDamage)
           return null
       case "LOADING":
           return (
@@ -38,7 +37,7 @@ function App() {
               />
           )
       default:
-          const leftover = carDamageAppState
+          const leftover = state
           return null
   }
 }

@@ -2,36 +2,30 @@ import React from "react";
 import {CarDamageAppState, damageType} from "../model/state";
 import {assertState} from "../model/assertState";
 import handleAsyncData from "../utils/restFaker";
+import {useDispatch} from "react-redux";
+import {callSeller, chatSeller, chooseContact} from "../store/actions";
 
 const ContactOption: React.FC<{
-    setStateOfMachine: (newStateOfMachine: CarDamageAppState) => void,
     stateOfMachine: CarDamageAppState
-}> = ({setStateOfMachine, stateOfMachine}) => {
+}> = ({ stateOfMachine}) => {
     assertState(stateOfMachine, "CONTACT_OPTION")
     const inputRef = React.createRef<HTMLSelectElement>()
+    const dispatch = useDispatch()
 
     if(stateOfMachine.error)  alert('We have an issue! Try again later.')
 
     const handleForm = async () => {
-        setStateOfMachine({type: "LOADING"})
         if  (inputRef.current) {
-            setStateOfMachine({type: "LOADING"})
+            dispatch({type: "LOADING"})
             try {
                 const contactWayInputValue =  inputRef.current.value
-                const contactWay= await handleAsyncData(contactWayInputValue === "call" ? "CALL_SELLER" : "CHAT_SELLER") as "CALL_SELLER" | "CHAT_SELLER"
-                setStateOfMachine({
-                    type: contactWay,
-                    plateNumber: stateOfMachine.plateNumber,
-                    chosenDamage: stateOfMachine.chosenDamage,
-                    error: false
-                })
+                if (contactWayInputValue === "call") {
+                    dispatch(callSeller(stateOfMachine.plateNumber, false, stateOfMachine.chosenDamage))
+                } else {
+                    dispatch(chatSeller(stateOfMachine.plateNumber, false, stateOfMachine.chosenDamage))
+                }
             } catch (e) {
-                setStateOfMachine({
-                    type: "CONTACT_OPTION",
-                    plateNumber: stateOfMachine.plateNumber,
-                    chosenDamage: stateOfMachine.chosenDamage,
-                    error: true
-                })
+                dispatch(chooseContact( stateOfMachine.plateNumber, true, inputRef.current.value as damageType))
             }
         }
     }
