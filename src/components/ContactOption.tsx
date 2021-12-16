@@ -3,7 +3,7 @@ import {CarDamageAppState, damageType} from "../model/state";
 import {assertState} from "../model/assertState";
 import handleAsyncData from "../utils/restFaker";
 import {useDispatch} from "react-redux";
-import {callSeller, chatSeller, chooseContact} from "../store/actions";
+import {callSeller, chatSeller, chooseContact, contactWithSeller} from "../store/actions";
 
 const ContactOption: React.FC<{
     stateOfMachine: CarDamageAppState
@@ -16,17 +16,7 @@ const ContactOption: React.FC<{
 
     const handleForm = async () => {
         if  (inputRef.current) {
-            dispatch({type: "LOADING"})
-            try {
-                const contactWayInputValue =  inputRef.current.value
-                if (contactWayInputValue === "call") {
-                    dispatch(callSeller(stateOfMachine.plateNumber, false, stateOfMachine.chosenDamage))
-                } else {
-                    dispatch(chatSeller(stateOfMachine.plateNumber, false, stateOfMachine.chosenDamage))
-                }
-            } catch (e) {
-                dispatch(chooseContact( stateOfMachine.plateNumber, true, inputRef.current.value as damageType))
-            }
+            dispatch(contactWithSeller(inputRef.current.value as "call" | "chat"))
         }
     }
 

@@ -1,9 +1,8 @@
 import React from "react";
 import {CarDamageAppState} from "../model/state";
 import {assertState} from "../model/assertState";
-import handleAsyncData from "../utils/restFaker";
 import {useDispatch} from "react-redux";
-import {chooseDamage, loading, verifyPlateNumber} from "../store/actions";
+import {verifyPlateNumber} from "../store/actions";
 
 const IdentifyCar: React.FC<{
     stateOfMachine: CarDamageAppState
@@ -16,13 +15,7 @@ const IdentifyCar: React.FC<{
 
     const handleForm = async () => {
         if  (inputRef.current && inputRef.current.value.length === 4) {
-            dispatch(loading())
-            try{
-                const plateNumber = await handleAsyncData(inputRef.current.value) as number
-                dispatch(chooseDamage(plateNumber))
-            } catch (e) {
-                dispatch(verifyPlateNumber(true))
-            }
+            dispatch(verifyPlateNumber(+inputRef.current.value))
         } else {
             alert('You mas pass proper 4 digit plate number of car!')
         }
